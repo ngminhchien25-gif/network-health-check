@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "NetCheck - demo (no devices, no email)",
+      "type": "debugpy", "request": "launch", "program": "${workspaceFolder}/main.py",
+      "args": ["-c", "config/config.demo.yaml", "--demo", "--no-email"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "NetCheck - GNS3 lab (no email)",
+      "type": "debugpy", "request": "launch", "program": "${workspaceFolder}/main.py",
+      "args": ["-c", "config/config.yaml", "--no-email", "-v"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "NetCheck - GNS3 lab + email",
+      "type": "debugpy", "request": "launch", "program": "${workspaceFolder}/main.py",
+      "args": ["-c", "config/config.yaml"],
+      "console": "integratedTerminal"
+    }
+  ]
+}

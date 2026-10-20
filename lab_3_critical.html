@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GNS3 Lab - R2 Fa1/0 shut down (critical)</title>
+<style>
+  @page { size: a4 landscape; margin: 1cm; }
+  body { font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #1f2933; margin: 20px; }
+  h1 { font-size: 22px; margin: 0 0 4px 0; }
+  h2 { font-size: 16px; margin: 24px 0 6px 0; border-bottom: 2px solid #d9e2ec; padding-bottom: 4px; }
+  h3 { font-size: 13px; margin: 14px 0 4px 0; color: #486581; }
+  .muted { color: #829ab1; }
+  table { border-collapse: collapse; width: 100%; margin-bottom: 8px; }
+  th { background: #f0f4f8; text-align: left; padding: 5px 8px; border: 1px solid #d9e2ec; }
+  td { padding: 5px 8px; border: 1px solid #d9e2ec; vertical-align: top; }
+  table.cards td { text-align: center; border: 2px solid #fff; padding: 10px; font-size: 12px; }
+  .num { font-size: 26px; font-weight: bold; }
+  .badge { padding: 2px 8px; font-weight: bold; font-size: 11px; color: #fff; }
+  .badge.ok { background: #2f9e44; }  .badge.info { background: #1c7ed6; }
+  .badge.warning { background: #e67700; }  .badge.critical { background: #c92a2a; }
+  .c-total { background: #e9ecef; } .c-ok { background: #d3f9d8; } .c-warning { background: #ffe8cc; }
+  .c-critical { background: #ffe3e3; } .c-unreach { background: #f3d9fa; }
+  tr.row-warning td { background: #fff4e6; }  tr.row-critical td { background: #fff0f0; }
+  .banner { padding: 8px 12px; font-weight: bold; margin: 10px 0; }
+  .banner.ok { background: #d3f9d8; color: #2b8a3e; } .banner.warning { background: #ffe8cc; color: #d9480f; }
+  .banner.critical { background: #ffe3e3; color: #c92a2a; }
+  pre { background: #f8f9fa; border: 1px solid #e9ecef; padding: 8px; font-size: 11px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<h1>GNS3 Lab - R2 Fa1/0 shut down (critical)</h1>
+<div class="muted">Generated 2026-10-20 09:30:00 &middot; 2 device(s)</div>
+
+<div class="banner critical">
+  Overall status: CRITICAL
+</div>
+
+<table class="cards"><tr>
+  <td class="c-total"><div class="num">2</div>Devices</td>
+  <td class="c-ok"><div class="num">0</div>OK</td>
+  <td class="c-warning"><div class="num">0</div>Warning</td>
+  <td class="c-critical"><div class="num">2</div>Critical</td>
+  <td class="c-unreach"><div class="num">0</div>Unreachable</td>
+</tr></table>
+
+<h2>Summary</h2>
+<table>
+  <tr><th>Device</th><th>Host</th><th>Role</th><th>Status</th><th>Issues</th><th>Duration</th></tr>
+  <tr>
+    <td><a href="#dev-R1">R1</a></td><td>192.168.195.50</td><td>router</td>
+    <td><span class="badge critical">CRITICAL</span></td>
+    <td>6</td>
+    <td>0.0s</td>
+  </tr>
+  <tr>
+    <td><a href="#dev-R2">R2</a></td><td>192.168.195.51</td><td>router</td>
+    <td><span class="badge critical">CRITICAL</span></td>
+    <td>8</td>
+    <td>0.0s</td>
+  </tr>
+</table>
+
+<h2 id="dev-R1">R1 <span class="muted">(192.168.195.50)</span> <span class="badge critical">CRITICAL</span></h2>
+
+<h3>Findings</h3>
+<table>
+  <tr><th style="width:90px">Severity</th><th style="width:110px">Category</th><th>Message</th></tr>
+  <tr><td><span class="badge critical">CRITICAL</span></td><td>ping</td><td>Ping to 10.0.12.2: 100% packet loss</td></tr>
+  <tr><td><span class="badge critical">CRITICAL</span></td><td>ping</td><td>Ping to 10.30.30.1: 100% packet loss</td></tr>
+  <tr><td><span class="badge critical">CRITICAL</span></td><td>routing</td><td>Expected route 10.30.30.1 is missing from the routing table</td></tr>
+  <tr><td><span class="badge critical">CRITICAL</span></td><td>routing</td><td>Expected route 10.0.12.0 is missing from the routing table</td></tr>
+  <tr><td><span class="badge critical">CRITICAL</span></td><td>interface</td><td>Critical interface FastEthernet1/0 is notconnect</td></tr>
+  <tr><td><span class="badge warning">WARNING</span></td><td>traceroute</td><td>Traceroute to 10.30.30.1 did not reach destination (last responding hop: 192.168.195.2)</td></tr>
+  <tr><td><span class="badge info">INFO</span></td><td>interface</td><td>4 interface(s) administratively disabled</td></tr>
+</table>
+
+<h3>Ping</h3>
+<table>
+  <tr><th>Target</th><th>Sent / Received</th><th>Loss</th><th>RTT min/avg/max (ms)</th><th>Status</th></tr>
+  <tr class="row-ok">
+    <td>192.168.195.2</td><td>5 / 5</td><td>0%</td>
+    <td>2 / 4 / 9</td>
+    <td><span class="badge ok">OK</span></td>
+  </tr>
+  <tr class="row-ok">
+    <td>8.8.8.8</td><td>5 / 5</td><td>0%</td>
+    <td>32 / 41 / 58</td>
+    <td><span class="badge ok">OK</span></td>
+  </tr>
+  <tr class="row-critical">
+    <td>10.0.12.2</td><td>5 / 0</td><td>100%</td>
+    <td>-</td>
+    <td><span class="badge critical">CRITICAL</span></td>
+  </tr>
+  <tr class="row-critical">
+    <td>10.30.30.1</td><td>5 / 0</td><td>100%</td>
+    <td>-</td>
+    <td><span class="badge critical">CRITICAL</span></td>
+  </tr>
+</table>
+
+<h3>Traceroute</h3>
+<table>
+  <tr><th>Target</th><th>Path</th><th>Reached</th><th>Status</th></tr>
+  <tr class="row-warning">
+    <td>10.30.30.1</td>
+    <td>192.168.195.2 → * (x29)</td>
+    <td>NO</td><td><span class="badge warning">WARNING</span></td>
+  </tr>
+</table>
+
+<h3>Routing table</h3>
+<p>
+  4 route(s):
+Connected=3, Static=1  &middot; default route:
+via 192.168.195.2<br><b>Missing expected routes:</b> 10.30.30.1, 10.0.12.0</p>
+
+<h3>Interfaces (3 / 8 up)</h3>
+<table>
+  <tr><th>Interface</th><th>Status</th><th>IP</th><th>VLAN</th><th>Duplex</th><th>Speed</th><th>Description</th><th>Note</th></tr>
+  <tr class="row-ok">
+    <td>FastEthernet0/0</td><td>connected</td><td>192.168.195.50</td><td>-</td>
+    <td>-</td><td>-</td><td>-</td><td></td>
+  </tr>
+  <tr class="row-ok">
+    <td>Serial0/0</td><td>disabled</td><td>-</td><td>-</td>
+    <td>-</td><td>-</td><td>-</td><td></td>
+  </tr>
+  <tr class="row-ok">
+    <td>FastEthernet0/1</td><td>disabled</td><td>-</td><td>-</td>
+    <td>-</td><td>-</td><td>-</td><td></td>
+  </tr>
+  <tr class="row-ok">
+    <td>Serial0/1</td><td>disabled</td><td>-</td><td>-</td>
+    <td>-</td><td>-</td><td>-</td><td></td>
+  </tr>
+  <tr class="row-critical">
+    <td>FastEthernet1/0</td><td>notconnect</td><td>10.0.12.1</td><td>-</td>
+    <td>-</td><td>-</td><td>-</td><td>critical interface not up</td>
+  </tr>
+  <tr class="row-ok">
+    <td>FastEthernet2/0</td><td>disabled</td><td>-</td><td>-</td>
+    <td>-</td><td>-</td><td>-</td><td></td>
+  </tr>
+  <tr class="row-ok">
+    <td>Loopback10</td><td>connected</td><td>10.10.10.1</td><td>-</td>
+    <td>-</td><td>-</td><td>-</td><td></td>
+  </tr>
+  <tr class="row-ok">
+    <td>Loopback20</td><td>connected</td><td>10.20.20.1</td><td>-</td>
+    <td>-</td><td>-</td><td>-</td><td></td>
+  </tr>
+</table>
+
+<h3>Raw output</h3>
+<details><summary>ping 192.168.195.2 repeat 5</summary><pre>Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.195.2, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 2/4/9 ms
+</pre></details>
+<details><summary>ping 8.8.8.8 repeat 5</summary><pre>Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 8.8.8.8, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 32/41/58 ms
+</pre></details>
+<details><summary>ping 10.0.12.2 repeat 5</summary><pre>Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.0.12.2, timeout is 2 seconds:
+.....
+Success rate is 0 percent (0/5)
+</pre></details>
+<details><summary>ping 10.30.30.1 repeat 5</summary><pre>Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.30.30.1, timeout is 2 seconds:
+.....
+Success rate is 0 percent (0/5)
+</pre></details>
+<details><summary>traceroute 10.30.30.1</summary><pre>Type escape sequence to abort.
+Tracing the route to 10.30.30.1
+
+  1 192.168.195.2 4 msec 4 msec 4 msec
+  2  *  *  *
+  3  *  *  *
+  4  *  *  *
+  5  *  *  *
+  6  *  *  *
+  7  *  *  *
+  8  *  *  *
+  9  *  *  *
+  10  *  *  *
+  11  *  *  *
+  12  *  *  *
+  13  *  *  *
+  14  *  *  *
+  15  *  *  *
+  16  *  *  *
+  17  *  *  *
+  18  *  *  *
+  19  *  *  *
+  20  *  *  *
+  21  *  *  *
+  22  *  *  *
+  23  *  *  *
+  24  *  *  *
+  25  *  *  *
+  26  *  *  *
+  27  *  *  *
+  28  *  *  *
+  29  *  *  *
+  30  *  *  *
+</pre></details>
+<details><summary>show ip route</summary><pre>Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, O - OSPF, IA - OSPF inter area, * - candidate default
+
+Gateway of last resort is 192.168.195.2 to network 0.0.0.0
+
+     10.0.0.0/32 is subnetted, 2 subnets
+C       10.10.10.1 is directly connected, Loopback10
+C       10.20.20.1 is directly connected, Loopback20
+C    192.168.195.0/24 is directly connected, FastEthernet0/0
+S*   0.0.0.0/0 [1/0] via 192.168.195.2
+</pre></details>
+<details><summary>show ip interface brief</summary><pre>Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            192.168.195.50  YES NVRAM  up                    up
+Serial0/0                  unassigned      YES NVRAM  administratively down down
+FastEthernet0/1            unassigned      YES NVRAM  administratively down down
+Serial0/1                  unassigned      YES NVRAM  administratively down down
+FastEthernet1/0            10.0.12.1       YES NVRAM  down                  down
+FastEthernet2/0            unassigned      YES NVRAM  administratively down down
+Loopback10                 10.10.10.1      YES NVRAM  up                    up
+Loopback20                 10.20.20.1      YES NVRAM  up                    up
+</pre></details>
+<h2 id="dev-R2">R2 <span class="muted">(192.168.195.51)</span> <span class="badge critical">CRITICAL</span></h2>
+
+<h3>Findings</h3>
+<table>
+  <tr><th style="width:90px">Severity</th><th style="width:110px">Category</th><th>Message</th></tr>
+  <tr><td><span class="badge critical">CRITICAL</span></td><td>ping</td><td>Ping to 10.0.12.1: 100% packet loss</td></tr>
+  <tr><td><span class="badge critical">CRITICAL</span></td><td>ping</td><td>Ping to 10.10.10.1: 100% packet loss</td></tr>
+  <tr><td><span class="badge critical">CRITICAL</span></td><td>ping</td><td>Ping to 10.20.20.1: 100% packet loss</td></tr>
+  <tr><td><span class="badge critical">CRITICAL</span></td><td>routing</td><td>Expected route 10.10.10.1 is missing from the routing table</td></tr>
+  <tr><td><span class="badge critical">CRITICAL</span></td><td>routing</td><td>Expected route 10.20.20.1 is missing from the routing table</td></tr>
+  <tr><td><span class="badge critical">CRITICAL</span></td><td>routing</td><td>Expected route 10.0.12.0 is missing from the routing table</td></tr>
+  <tr><td><span class="badge critical">CRITICAL</span></td><td>interface</td><td>Critical interface FastEthernet1/0 is disabled</td></tr>
+  <tr><td><span class="badge warning">WARNING</span></td><td>traceroute</td><td>Traceroute to 10.10.10.1 did not reach destination (last responding hop: 192.168.195.2)</td></tr>
+  <tr><td><span class="badge info">INFO</span></td><td>interface</td><td>2 interface(s) administratively disabled</td></tr>
+</table>
+
+<h3>Ping</h3>
+<table>
+  <tr><th>Target</th><th>Sent / Received</th><th>Loss</th><th>RTT min/avg/max (ms)</th><th>Status</th></tr>
+  <tr class="row-ok">
+    <td>192.168.195.2</td><td>5 / 5</td><td>0%</td>
+    <td>2 / 4 / 8</td>
+    <td><span class="badge ok">OK</span></td>
+  </tr>
+  <tr class="row-critical">
+    <td>10.0.12.1</td><td>5 / 0</td><td>100%</td>
+    <td>-</td>
+    <td><span class="badge critical">CRITICAL</span></td>
+  </tr>
+  <tr class="row-critical">
+    <td>10.10.10.1</td><td>5 / 0</td><td>100%</td>
+    <td>-</td>
+    <td><span class="badge critical">CRITICAL</span></td>
+  </tr>
+  <tr class="row-critical">
+    <td>10.20.20.1</td><td>5 / 0</td><td>100%</td>
+    <td>-</td>
+    <td><span class="badge critical">CRITICAL</span></td>
+  </tr>
+</table>
+
+<h3>Traceroute</h3>
+<table>
+  <tr><th>Target</th><th>Path</th><th>Reached</th><th>Status</th></tr>
+  <tr class="row-warning">
+    <td>10.10.10.1</td>
+    <td>192.168.195.2 → * (x29)</td>
+    <td>NO</td><td><span class="badge warning">WARNING</span></td>
+  </tr>
+</table>
+
+<h3>Routing table</h3>
+<p>
+  3 route(s):
+Connected=2, Static=1  &middot; default route:
+via 192.168.195.2<br><b>Missing expected routes:</b> 10.10.10.1, 10.20.20.1, 10.0.12.0</p>
+
+<h3>Interfaces (2 / 5 up)</h3>
+<table>
+  <tr><th>Interface</th><th>Status</th><th>IP</th><th>VLAN</th><th>Duplex</th><th>Speed</th><th>Description</th><th>Note</th></tr>
+  <tr class="row-ok">
+    <td>FastEthernet0/0</td><td>connected</td><td>192.168.195.51</td><td>-</td>
+    <td>-</td><td>-</td><td>-</td><td></td>
+  </tr>
+  <tr class="row-ok">
+    <td>Serial0/0</td><td>disabled</td><td>-</td><td>-</td>
+    <td>-</td><td>-</td><td>-</td><td></td>
+  </tr>
+  <tr class="row-ok">
+    <td>FastEthernet0/1</td><td>disabled</td><td>-</td><td>-</td>
+    <td>-</td><td>-</td><td>-</td><td></td>
+  </tr>
+  <tr class="row-critical">
+    <td>FastEthernet1/0</td><td>disabled</td><td>10.0.12.2</td><td>-</td>
+    <td>-</td><td>-</td><td>-</td><td>critical interface not up</td>
+  </tr>
+  <tr class="row-ok">
+    <td>Loopback10</td><td>connected</td><td>10.30.30.1</td><td>-</td>
+    <td>-</td><td>-</td><td>-</td><td></td>
+  </tr>
+</table>
+
+<h3>Raw output</h3>
+<details><summary>ping 192.168.195.2 repeat 5</summary><pre>Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.195.2, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 2/4/8 ms
+</pre></details>
+<details><summary>ping 10.0.12.1 repeat 5</summary><pre>Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.0.12.1, timeout is 2 seconds:
+.....
+Success rate is 0 percent (0/5)
+</pre></details>
+<details><summary>ping 10.10.10.1 repeat 5</summary><pre>Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.10.10.1, timeout is 2 seconds:
+.....
+Success rate is 0 percent (0/5)
+</pre></details>
+<details><summary>ping 10.20.20.1 repeat 5</summary><pre>Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.20.20.1, timeout is 2 seconds:
+.....
+Success rate is 0 percent (0/5)
+</pre></details>
+<details><summary>traceroute 10.10.10.1</summary><pre>Type escape sequence to abort.
+Tracing the route to 10.10.10.1
+
+  1 192.168.195.2 4 msec 4 msec 4 msec
+  2  *  *  *
+  3  *  *  *
+  4  *  *  *
+  5  *  *  *
+  6  *  *  *
+  7  *  *  *
+  8  *  *  *
+  9  *  *  *
+  10  *  *  *
+  11  *  *  *
+  12  *  *  *
+  13  *  *  *
+  14  *  *  *
+  15  *  *  *
+  16  *  *  *
+  17  *  *  *
+  18  *  *  *
+  19  *  *  *
+  20  *  *  *
+  21  *  *  *
+  22  *  *  *
+  23  *  *  *
+  24  *  *  *
+  25  *  *  *
+  26  *  *  *
+  27  *  *  *
+  28  *  *  *
+  29  *  *  *
+  30  *  *  *
+</pre></details>
+<details><summary>show ip route</summary><pre>Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, O - OSPF, IA - OSPF inter area, * - candidate default
+
+Gateway of last resort is 192.168.195.2 to network 0.0.0.0
+
+     10.0.0.0/32 is subnetted, 1 subnets
+C       10.30.30.1 is directly connected, Loopback10
+C    192.168.195.0/24 is directly connected, FastEthernet0/0
+S*   0.0.0.0/0 [1/0] via 192.168.195.2
+</pre></details>
+<details><summary>show ip interface brief</summary><pre>Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            192.168.195.51  YES NVRAM  up                    up
+Serial0/0                  unassigned      YES NVRAM  administratively down down
+FastEthernet0/1            unassigned      YES NVRAM  administratively down down
+FastEthernet1/0            10.0.12.2       YES NVRAM  administratively down down
+Loopback10                 10.30.30.1      YES NVRAM  up                    up
+</pre></details>
+
+<p class="muted" style="margin-top:30px">Generated by NetCheck</p>
+</body>
+</html>

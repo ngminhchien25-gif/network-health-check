@@ -1,0 +1,139 @@
+{# Report template. CSS is deliberately simple (tables, no flex/grid/variables) so the same
+   markup renders in browsers, e-mail clients and xhtml2pdf. #}
+{% macro badge(sev) %}<span class="badge {{ sev.name|lower }}">{{ sev.name }}</span>{% endmacro %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{ title }}</title>
+<style>
+  @page { size: a4 landscape; margin: 1cm; }
+  body { font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #1f2933; margin: 20px; }
+  h1 { font-size: 22px; margin: 0 0 4px 0; }
+  h2 { font-size: 16px; margin: 24px 0 6px 0; border-bottom: 2px solid #d9e2ec; padding-bottom: 4px; }
+  h3 { font-size: 13px; margin: 14px 0 4px 0; color: #486581; }
+  .muted { color: #829ab1; }
+  table { border-collapse: collapse; width: 100%; margin-bottom: 8px; }
+  th { background: #f0f4f8; text-align: left; padding: 5px 8px; border: 1px solid #d9e2ec; }
+  td { padding: 5px 8px; border: 1px solid #d9e2ec; vertical-align: top; }
+  table.cards td { text-align: center; border: 2px solid #fff; padding: 10px; font-size: 12px; }
+  .num { font-size: 26px; font-weight: bold; }
+  .badge { padding: 2px 8px; font-weight: bold; font-size: 11px; color: #fff; }
+  .badge.ok { background: #2f9e44; }  .badge.info { background: #1c7ed6; }
+  .badge.warning { background: #e67700; }  .badge.critical { background: #c92a2a; }
+  .c-total { background: #e9ecef; } .c-ok { background: #d3f9d8; } .c-warning { background: #ffe8cc; }
+  .c-critical { background: #ffe3e3; } .c-unreach { background: #f3d9fa; }
+  tr.row-warning td { background: #fff4e6; }  tr.row-critical td { background: #fff0f0; }
+  .banner { padding: 8px 12px; font-weight: bold; margin: 10px 0; }
+  .banner.ok { background: #d3f9d8; color: #2b8a3e; } .banner.warning { background: #ffe8cc; color: #d9480f; }
+  .banner.critical { background: #ffe3e3; color: #c92a2a; }
+  pre { background: #f8f9fa; border: 1px solid #e9ecef; padding: 8px; font-size: 11px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<h1>{{ title }}</h1>
+<div class="muted">Generated {{ generated_at }} &middot; {{ summary.total }} device(s)</div>
+
+<div class="banner {{ summary.overall.name|lower if summary.overall.name != 'INFO' else 'ok' }}">
+  Overall status: {{ summary.overall.name }}
+</div>
+
+<table class="cards"><tr>
+  <td class="c-total"><div class="num">{{ summary.total }}</div>Devices</td>
+  <td class="c-ok"><div class="num">{{ summary.ok }}</div>OK</td>
+  <td class="c-warning"><div class="num">{{ summary.warning }}</div>Warning</td>
+  <td class="c-critical"><div class="num">{{ summary.critical }}</div>Critical</td>
+  <td class="c-unreach"><div class="num">{{ summary.unreachable }}</div>Unreachable</td>
+</tr></table>
+
+<h2>Summary</h2>
+<table>
+  <tr><th>Device</th><th>Host</th><th>Role</th><th>Status</th><th>Issues</th><th>Duration</th></tr>
+  {% for r in reports %}
+  <tr>
+    <td><a href="#dev-{{ r.name }}">{{ r.name }}</a></td><td>{{ r.host }}</td><td>{{ r.role }}</td>
+    <td>{{ badge(r.status) }}</td>
+    <td>{{ r.findings|selectattr('severity', 'ge', Severity.WARNING)|list|length }}</td>
+    <td>{{ r.duration_s }}s</td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% for r in reports %}
+<h2 id="dev-{{ r.name }}">{{ r.name }} <span class="muted">({{ r.host }})</span> {{ badge(r.status) }}</h2>
+
+{% if r.findings %}
+<h3>Findings</h3>
+<table>
+  <tr><th style="width:90px">Severity</th><th style="width:110px">Category</th><th>Message</th></tr>
+  {% for f in r.findings|sort(attribute='severity', reverse=True) %}
+  <tr><td>{{ badge(f.severity) }}</td><td>{{ f.category }}</td><td>{{ f.message }}</td></tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>No issues detected.</p>
+{% endif %}
+
+{% if r.pings %}
+<h3>Ping</h3>
+<table>
+  <tr><th>Target</th><th>Sent / Received</th><th>Loss</th><th>RTT min/avg/max (ms)</th><th>Status</th></tr>
+  {% for p in r.pings %}
+  <tr class="row-{{ p.severity.name|lower }}">
+    <td>{{ p.target }}</td><td>{{ p.sent }} / {{ p.received }}</td><td>{{ '%g'|format(p.loss_pct) }}%</td>
+    <td>{% if p.rtt_avg is not none %}{{ p.rtt_min }} / {{ p.rtt_avg }} / {{ p.rtt_max }}{% else %}-{% endif %}</td>
+    <td>{{ badge(p.severity) }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+{% if r.traces %}
+<h3>Traceroute</h3>
+<table>
+  <tr><th>Target</th><th>Path</th><th>Reached</th><th>Status</th></tr>
+  {% for t in r.traces %}
+  <tr class="row-{{ t.severity.name|lower }}">
+    <td>{{ t.target }}</td>
+    <td>{{ t.hops|compact_path }}</td>
+    <td>{{ 'yes' if t.reached else 'NO' }}</td><td>{{ badge(t.severity) }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+{% if r.routes %}
+<h3>Routing table</h3>
+<p>
+  {{ r.routes.total }} route(s):
+  {% for proto, n in r.routes.by_protocol.items() %}{{ proto }}={{ n }}{% if not loop.last %}, {% endif %}{% endfor %}
+  &middot; default route:
+  {% if r.routes.default_route %}via {{ r.routes.gateway }}{% else %}not set{% endif %}
+  {% if r.routes.missing %}<br><b>Missing expected routes:</b> {{ r.routes.missing|join(', ') }}{% endif %}
+</p>
+{% endif %}
+
+{% if r.interfaces %}
+<h3>Interfaces ({{ r.interfaces|selectattr('status', 'equalto', 'connected')|list|length }} / {{ r.interfaces|length }} up)</h3>
+<table>
+  <tr><th>Interface</th><th>Status</th><th>IP</th><th>VLAN</th><th>Duplex</th><th>Speed</th><th>Description</th><th>Note</th></tr>
+  {% for i in r.interfaces %}
+  <tr class="row-{{ i.severity.name|lower }}">
+    <td>{{ i.name }}</td><td>{{ i.status }}</td><td>{{ i.ip or '-' }}</td><td>{{ i.vlan or '-' }}</td>
+    <td>{{ i.duplex or '-' }}</td><td>{{ i.speed or '-' }}</td><td>{{ i.description or '-' }}</td><td>{{ i.note }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+{% if not compact and r.raw %}
+<h3>Raw output</h3>
+{% for cmd, out in r.raw.items() %}
+<details><summary>{{ cmd }}</summary><pre>{{ out }}</pre></details>
+{% endfor %}
+{% endif %}
+{% endfor %}
+
+<p class="muted" style="margin-top:30px">Generated by NetCheck</p>
+</body>
+</html>

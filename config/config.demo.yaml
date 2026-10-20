@@ -1,0 +1,23 @@
+# Offline demo: run with  python main.py -c config/config.demo.yaml --demo --no-email
+settings: {max_workers: 4}
+thresholds: {loss_critical_pct: 50, latency_warning_ms: 100}
+report: {title: "NetCheck DEMO (simulated devices)", output_dir: reports, pdf: true}
+smtp:
+  host: ${SMTP_HOST:-localhost}
+  port: ${SMTP_PORT:-1025}
+  use_starttls: ${SMTP_STARTTLS:-false}
+  use_ssl: ${SMTP_SSL:-false}
+  username: ${SMTP_USER:-}
+  password: ${SMTP_PASSWORD:-}
+  sender: ${SMTP_FROM:-netcheck@lab.local}
+  recipients:
+    - ${ADMIN_EMAIL:-admin@lab.local}
+defaults: {username: admin, password: cisco, secret: cisco}
+devices:
+  - {name: R1, host: 192.168.56.11, role: router, ping_targets: [2.2.2.2, 10.0.12.2, 192.168.56.13],
+     traceroute_targets: [2.2.2.2], expected_routes: [2.2.2.2/32, 10.0.12.0/30], critical_interfaces: [GigabitEthernet0/1]}
+  - {name: R2, host: 192.168.56.12, role: router, ping_targets: [1.1.1.1, 10.0.12.1],
+     traceroute_targets: [1.1.1.1], expected_routes: [1.1.1.1/32], critical_interfaces: [GigabitEthernet0/1]}
+  - {name: SW1, host: 192.168.56.13, role: switch, checks: [ping, interfaces],
+     ping_targets: [192.168.56.11, 192.168.56.12], critical_interfaces: [Gi0/1, Gi0/2]}
+  - {name: R3, host: 192.168.56.14, role: router, ping_targets: [1.1.1.1]}

@@ -1,0 +1,62 @@
+# ============================================================================
+# NetCheck - GNS3 lab (2x Cisco c3745, IOS 12.4, Telnet, VMware vmnet8 192.168.195.0/24)
+# ${VAR} / ${VAR:-default} are expanded from environment variables or .env
+# ============================================================================
+settings:
+  max_workers: 3          # Dynamips routers are CPU-bound; keep it low
+  conn_timeout: 20
+  command_timeout: 90     # ping/traceroute through emulated routers can be slow
+
+thresholds:
+  loss_critical_pct: 50   # >=50% loss -> CRITICAL, 1..49% -> WARNING
+  latency_warning_ms: 100
+
+commands:
+  ping: "ping {target} repeat 5"
+  traceroute: "traceroute {target}"
+  routes: "show ip route"
+  interfaces:
+    router: "show ip interface brief"     # c3745 has routed ports only
+    switch: "show interfaces status"      # only if you add an NM-16ESW module (see README)
+
+report:
+  title: "GNS3 Lab - Network Health Check"
+  output_dir: reports
+  pdf: true               # needs: pip install xhtml2pdf
+
+smtp:                     # default = local Mailpit (SMTP :1025, web UI :8025)
+  host: ${SMTP_HOST:-localhost}
+  port: ${SMTP_PORT:-1025}
+  use_starttls: ${SMTP_STARTTLS:-false}
+  use_ssl: ${SMTP_SSL:-false}
+  username: ${SMTP_USER:-}
+  password: ${SMTP_PASSWORD:-}
+  sender: ${SMTP_FROM:-netcheck@lab.local}
+  recipients:
+    - ${ADMIN_EMAIL:-admin@lab.local}
+
+defaults:                 # merged into every device (device values win)
+  device_type: cisco_ios_telnet     # use cisco_ios for SSH
+  port: 23
+  username: ${NET_USER:-admin}
+  password: ${NET_PASSWORD:-cisco}
+  secret: ${NET_SECRET:-}           # empty = no enable password (user is privilege 15)
+
+devices:
+  - name: R1
+    host: 192.168.195.50            # <- your mgmt IP (was 192.168.195.129 via DHCP)
+    role: router
+    ping_targets: [10.0.12.2, 10.30.30.1]   # gateway, internet, R2 link, R2 loopback
+    traceroute_targets: [10.30.30.1]
+    expected_routes: [10.30.30.1, 10.0.12.0]       # learned from R2 via OSPF + connected link
+    critical_interfaces: [FastEthernet0/0, FastEthernet1/0]
+    require_default_route: true
+
+  - name: R2
+    host: 192.168.195.51
+    role: router
+    ping_targets: [10.0.12.1, 10.10.10.1, 10.20.20.1]
+    traceroute_targets: [10.10.10.1]
+    expected_routes: [10.10.10.1, 10.20.20.1, 10.0.12.0]
+    critical_interfaces: [FastEthernet0/0, FastEthernet1/0]
+    require_default_route: true
